@@ -1,7 +1,6 @@
 package com.mycompany.practica_7;
 
 public interface Movible {
-
     public void rotateRight();
     public void rotateLeft();
     public int contarPuntos();

@@ -71,28 +71,21 @@ public class CurlysMultiPieceMino {
     }
 
     public boolean comprobarGiroCorrecto(Movible ficha1) {
-//System.out.println("Estoy comprobando el giro correcto");
-        boolean resultado = false;
         if (caraActual1 != -1 && caraActual2 != -1) {
-            if (ficha1.getLadoA() == caraActual1 && ficha1.getLadoC() == caraActual2 && ficha1.
-                    getPosicion() != 0) {
-                resultado = true;
-            } else {
-            }
-        } else if (caraActual1 != -1 && caraActual2 == -1) {
+            return ficha1.getLadoA() == caraActual1 && ficha1.getLadoC() == caraActual2 && ficha1.getPosicion() != 0;
+        }
+
+        if (caraActual1 != -1 && caraActual2 == -1) {
+            // Si es una ficha de dominó
             if (ficha1.getNumeroDLados() == 2) {
-                if (ficha1.getLadoA() == caraActual1) {
-                    resultado = true;
-                } else {
-                }
-            } else if (ficha1.getNumeroDLados() == 3) {
-                if ((ficha1.getLadoA() == caraActual1) && ficha1.getPosicion() != 1) {
-                    resultado = true;
-                } else {
-                }
+                return ficha1.getLadoA() == caraActual1;
+            }
+            
+            if (ficha1.getNumeroDLados() == 3) {
+                return ficha1.getLadoA() == caraActual1 && ficha1.getPosicion() != 1;
             }
         }
-        return resultado;
+        return false;
     }
 
     public void actualizarCarasAct(Movible ficha1) {
