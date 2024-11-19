@@ -271,8 +271,7 @@ public class CurlysMultiPieceMino {
             System.out.println(fichaSeleccionada);
             boolean validacionTrinomino = comprobarTridomino(fichaSeleccionada);
             if (!validacionTrinomino) {
-                System.out.println(
-                        "Solo se aceptan fichas tridomino para el tablero actual");
+                System.out.println("Solo se aceptan fichas tridomino para el tablero actual");
                 validacionFichaSeleccionada = -1;
             } else {
                 validacionFichaSeleccionada = validarSiguienteFicha(fichaSeleccionada);
@@ -282,9 +281,13 @@ public class CurlysMultiPieceMino {
                 System.out.println("Las fichas que restan del pozo son: " + elPozo.getSize());
                 System.out.println("Las caras disponibles son: " + caraActual1 + " " + caraActual2);
                 System.out.println("Elegiste una ficha que no se puede jugar, se te dieron dos fichas del pozo");
-                jugadores.get(turno).ingresarFichaMano(fichaSeleccionada);
-                jugadores.get(turno).ingresarFichaMano(elPozo.repartirFicha());
-                jugadores.get(turno).ingresarFichaMano(elPozo.repartirFicha());
+                if(!elPozo.getPozo().isEmpty()){ // Solo repartir fichas si el pozo no está vacío    
+                    jugadores.get(turno).ingresarFichaMano(fichaSeleccionada);
+                    jugadores.get(turno).ingresarFichaMano(elPozo.repartirFicha());
+                    jugadores.get(turno).ingresarFichaMano(elPozo.repartirFicha());
+                } else {
+                    System.out.println("El pozo está vacío, no se pueden repartir más fichas.");
+                }
                 imprimirFichasJugadas();
                 System.out.println("Las caras disponibles son: " + caraActual1 + " " + caraActual2);
                 jugadores.get(turno).imprimirMano();
