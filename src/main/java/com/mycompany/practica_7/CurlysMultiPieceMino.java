@@ -25,7 +25,9 @@ public class CurlysMultiPieceMino {
                     break;
                 }
             }
-            if(resultado) break;
+            if (resultado) {
+                break;
+            }
         }
         if (resultado == true) {
             System.out.println("Todavia hay movimientos disponibles");
@@ -49,12 +51,14 @@ public class CurlysMultiPieceMino {
 
     public boolean comprobarTridomino(Movible ficha1) {
         boolean resultado = false;
+        // Si ambas caras están definidas
         if (caraActual1 != -1 && caraActual2 != -1) {
             if (ficha1.getNumeroDLados() == 3) {
                 resultado = true;
             }
         } else if (caraActual1 != -1 && caraActual2 == -1) {
-            resultado = true;
+            // Si solo una cara está definida (jugando una ficha de 2 lados)
+            resultado = ficha1.getNumeroDLados() == 2 || ficha1.getNumeroDLados() == 3;
         }
         return resultado;
     }
@@ -80,7 +84,7 @@ public class CurlysMultiPieceMino {
             if (ficha1.getNumeroDLados() == 2) {
                 return ficha1.getLadoA() == caraActual1;
             }
-            
+
             if (ficha1.getNumeroDLados() == 3) {
                 return ficha1.getLadoA() == caraActual1 && ficha1.getPosicion() != 1;
             }
@@ -98,30 +102,28 @@ public class CurlysMultiPieceMino {
         }
     }
 
-    public int validarSiguienteFicha(Movible fichaValidar) {
+    public int validarSiguienteFicha(Movible fichaValidar) { //Revisar este metodo
         int resultado = -1;
         if (caraActual2 == -1) {
+            // Solo una cara está definida
             char tipoDLado1 = fichaValidar.validarLado(caraActual1, 1);
-            if (tipoDLado1 == 'n') {
-                resultado = -1;
-            } else {
-                resultado = 1;
+            if (tipoDLado1 != 'n') {
+                resultado = 1; // Ficha válida
             }
         } else {
-            if (caraActual1 != caraActual2) {
-                char tipoDLado1 = fichaValidar.validarLado(caraActual1, 2);
-                char tipoDLado2 = fichaValidar.validarLado(caraActual2, 2);
-                if (tipoDLado1 == 'n' || tipoDLado2 == 'n') {
-                    resultado = -1;
-                } else {
-                    resultado = 2;
+            // Ambas caras están definidas
+            if (caraActual1 == caraActual2) {
+                char tipoDLado1 = fichaValidar.validarLado(caraActual1, 3);
+                if (tipoDLado1 != 'n') {
+                    resultado = 1;  // Ficha válida
                 }
             } else {
-                char tipoDLado1 = fichaValidar.validarLado(caraActual1, 3);
-                if (tipoDLado1 == 'n') {
-                    resultado = -1;
-                } else {
-                    resultado = 1;
+                char tipoDLado1 = fichaValidar.validarLado(caraActual1, 2);
+                char tipoDLado2 = fichaValidar.validarLado(caraActual2, 2);
+                char tipoDLado3 = fichaValidar.validarLado(caraActual1, 4);
+                char tipoDLado4 = fichaValidar.validarLado(caraActual2, 4);
+                if ((tipoDLado1 == 'a' && tipoDLado2 == 'c') || (tipoDLado1 == 'b' && tipoDLado2 == 'a') || (tipoDLado1 == 'c' && tipoDLado2 == 'b') || (tipoDLado3 == 'b' && tipoDLado4 == 'a')) {
+                    resultado = 2;  // Ficha válida
                 }
             }
         }
@@ -211,10 +213,10 @@ public class CurlysMultiPieceMino {
         }
     }
 
-    public boolean juegoTerminado(){
-        return verificarManoVacia() != 0 && verificarPozoVacio() && !comprobarMovimientosDisponibles();
+    public boolean juegoTerminado() {
+        return verificarManoVacia() != 0 || (verificarPozoVacio() && !comprobarMovimientosDisponibles());
     }
-    
+
     public void jugar() {
         int validacionFichaSeleccionada = -1;
         int indiceFichaDLaMano = 0;
@@ -256,7 +258,7 @@ public class CurlysMultiPieceMino {
         }
         imprimirFichasJugadas();
         //Aqui inicia el juego 
-        while (!juegoTerminado()){
+        while (!juegoTerminado()) {
             int fichaAJugar = 0;
             System.out.println("El jugador que sigue es el :" + (turno + 1));
             System.out.println("Las fichas que restan del pozo son: " + elPozo.getSize());
@@ -281,7 +283,7 @@ public class CurlysMultiPieceMino {
                 System.out.println("Las fichas que restan del pozo son: " + elPozo.getSize());
                 System.out.println("Las caras disponibles son: " + caraActual1 + " " + caraActual2);
                 System.out.println("Elegiste una ficha que no se puede jugar, se te dieron dos fichas del pozo");
-                if(!elPozo.getPozo().isEmpty()){ // Solo repartir fichas si el pozo no está vacío    
+                if (!elPozo.getPozo().isEmpty()) { // Solo repartir fichas si el pozo no está vacío    
                     jugadores.get(turno).ingresarFichaMano(fichaSeleccionada);
                     jugadores.get(turno).ingresarFichaMano(elPozo.repartirFicha());
                     jugadores.get(turno).ingresarFichaMano(elPozo.repartirFicha());
@@ -303,7 +305,7 @@ public class CurlysMultiPieceMino {
                     System.out.println("Solo se aceptan fichas tridomino para el tablero actual");
                     validacionFichaSeleccionada = -1;
                 } else {
-                    validacionFichaSeleccionada = validarSiguienteFicha(fichaSeleccionada);
+                    validacionFichaSeleccionada = validarSiguienteFicha(fichaSeleccionada); //Revisar
                 }
                 if (validacionFichaSeleccionada == -1) {
                     jugadores.get(turno).ingresarFichaMano(fichaSeleccionada);
@@ -319,32 +321,7 @@ public class CurlysMultiPieceMino {
                 while (!fichaGirada) {
                     System.out.println("Quieres girar la ficha(Derecha) / (Izquierda) / (No) ");
                     String op = scanner.nextLine();
-                    switch (op) {
-                        case "Derecha":
-                            System.out.println(fichaSeleccionada);
-                            fichaSeleccionada.rotateRight();
-                            System.out.println(fichaSeleccionada);
-                            break;
-                        case "Izquierda":
-                            System.out.println(fichaSeleccionada);
-                            fichaSeleccionada.rotateLeft();
-                            System.out.println(fichaSeleccionada);
-                            break;
-                        case "No":
-                            System.out.println("No se girara la ficha");
-                            fichaGirada = comprobarGiroCorrecto(fichaSeleccionada);
-                            if (!fichaGirada) {
-                                System.out.println(
-                                        "La ficha no encaja en el tablero, siga girando hasta que encaje, por favor");
-                            } else {
-                                fichasJugadas.add(fichaSeleccionada);
-                                jugadores.get(turno).calcularPuntaje(fichaSeleccionada.contarPuntos());
-                                actualizarCarasAct(fichaSeleccionada);
-                            }
-                            break;
-                        default:
-                            System.out.println("Opción no válida. Por favor, ingresa 'Derecha', 'Izquierda'o 'No'.");
-                    }
+                    girarFichaCiclo(fichaSeleccionada, op);
                 }
             }
             System.out.println("El puntaje del jugador" + ((turno) + 1) + " :"
@@ -352,6 +329,7 @@ public class CurlysMultiPieceMino {
             cambiarTurno();
             if (elPozo.getPozo().isEmpty()) {
                 movimientosDisponibles = comprobarMovimientosDisponibles();
+                System.out.println("Movimientos Disponibles: "+movimientosDisponibles);
             }
             imprimirFichasJugadas();
         }

@@ -62,17 +62,28 @@ public class TrifichaLogica extends FichaLogica implements Movible {
     @Override
     public char validarLado(int caraActual, int caso) {
         char resultado = 'n';
+
+        // Caso 1: Verificar si alguno de los lados coincide
         if (caso == 1) {
-            if (ladoA == caraActual || ladoB == caraActual || ladoC == caraActual) {
+            if (ladoA == caraActual) {
                 resultado = 'a';
+            } else if (ladoB == caraActual) {
+                resultado = 'b';
+            } else if (ladoC == caraActual) {
+                resultado = 'c';
             }
-        } else if (caso == 2) {
+        } 
+        else if (caso == 2) {
+            // Verificar los tres lados: A, B y C
             if (ladoA == caraActual) {
                 resultado = 'a';
             } else if (ladoC == caraActual) {
                 resultado = 'c';
+            } else if (ladoB == caraActual) {
+                resultado = 'b';
             }
-        } else if (caso == 3) {
+        } 
+        else if (caso == 3) {
             if (ladoA == caraActual && (ladoA == ladoB || ladoA == ladoC)) {
                 resultado = 'a';
             } else if (ladoC == caraActual && (ladoC == ladoA || ladoC == ladoB)) {
@@ -80,7 +91,15 @@ public class TrifichaLogica extends FichaLogica implements Movible {
             } else if (ladoB == caraActual && (ladoB == ladoA || ladoB == ladoC)) {
                 resultado = 'c';
             }
+        } else if (caso == 4) {
+            // Verificar los tres lados: A, B y C
+            if (ladoB == caraActual) {
+                resultado = 'b';
+            } else if (ladoA == caraActual) {
+                resultado = 'a';
+            }
         }
+
         return resultado;
     }
 
